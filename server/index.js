@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var api = require('./routes/api');
 
 var app = express();
-
+app.use(express.static("../build"));
 app.set('port', (process.env.PORT || 3000));
 
 var server = app.listen(app.get('port'), function () {
@@ -13,11 +13,9 @@ var server = app.listen(app.get('port'), function () {
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../Public')));
-
+app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use(bodyParser.json());
 
 app.use('/api', (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -28,11 +26,10 @@ app.use('/api', (req, res, next) => {
 
 app.use('/api', api);
 
-app.get('/', function (req, res) {
-  //res.status(200).send('Hi. Tic Tac Toe Homepage');
-  res.sendFile(path.join(__dirname, '../build', 'index.html'));
-});
-
+app.use(express.static("build"));
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve("build", "index.html"))
+  );
 app.all('*', function (req, res) {
   res.status(404).send('Nothing Here');
 });

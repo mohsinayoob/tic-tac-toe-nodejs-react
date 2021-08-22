@@ -24,7 +24,7 @@ class App extends React.Component {
     fetch('/api/move', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      data: { board: JSON.stringify(gameBoard) }
+      body: JSON.stringify({ board: gameBoard })
     }).then(response => response.json()).then((obj) => {
       var index = obj.nextMove;
       this.addToBoard(index);
@@ -37,12 +37,12 @@ class App extends React.Component {
     });
   }
 
-  winner() {
+  winner = () => {
     const { gameBoard } = this.state
     fetch('/api/winner', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      data: { board: JSON.stringify(gameBoard) }
+      headers: { "Content-Type": 'application/json' },
+      body: JSON.stringify({ board: gameBoard })
     }).then(response => response.json()).then((obj) => {
       const gameStatusRes = obj.winner;
       if (gameStatusRes !== 'In Progress') {
@@ -84,7 +84,7 @@ class App extends React.Component {
       fetch('/api/winner', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        data: { board: JSON.stringify(gameBoard) }
+        body: JSON.stringify({ board: gameBoard })
       }).then(response => response.json()).then((obj) => {
         const gameStatusRes = obj.winner;
         if (gameStatusRes !== 'In Progress') {
