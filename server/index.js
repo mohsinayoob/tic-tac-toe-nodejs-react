@@ -3,6 +3,8 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var api = require('./routes/api');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 
 var app = express();
 app.set('port', (process.env.PORT || 3000));
@@ -14,6 +16,11 @@ var server = app.listen(app.get('port'), function () {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+
+const swaggerDocument = YAML.load(path.resolve('server', 'tictactoe.yaml'));
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 app.use('/api', (req, res, next) => {

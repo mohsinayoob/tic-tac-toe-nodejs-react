@@ -37,6 +37,11 @@ Your app is ready to be deployed!
 - ### Game is designed so the server never loses a game and will always play the most optimal move.
 
 
+### `API Docs`
+
+API docs can be accessed on [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+This is implemented using swagger
+
 ### `Screenshot`
 
 ![Game Screenshot](./screenshot.png)

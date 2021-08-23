@@ -1,0 +1,70 @@
+swagger: "2.0"
+
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+info:
+  version: "1.0.0"
+  title: "Tic-tac-toe"
+
+schemes:
+  - http
+
+paths:
+  /api/move:
+    post:
+      description: Computer Move.
+      parameters:
+        -
+          name: board
+          in: body
+          required: true
+          default: {board: ["X", "O", "", "X", "", "", "", "", ""]}
+      responses:
+        200:
+          description: Successful response, returns the next move
+          schema:
+            type: object
+            items:
+              nextMove: string
+        400:
+          description: Bad request
+        404:
+          description: Resource not found
+        500:
+          description: Internal server error
+
+  /api/winner:
+    post:
+      description: Find the winner.
+      parameters:
+        -
+          name: board
+          in: body
+          required: true
+          default: {board: ["X", "O", "", "X", "", "", "", "", ""]}
+
+      responses:
+        200:
+          description: Game Status returned
+          schema:
+            type: object
+            properties:
+              winner:
+                type: string
+                description: Status of the game
+                enum: 
+        400:
+          description: Bad request
+          schema:
+            type: object
+            properties:
+              reason:
+                type: string
+                description: Why the game failed to start
+        404:
+          description: Resource not found
+        500:
+          description: Internal server error
