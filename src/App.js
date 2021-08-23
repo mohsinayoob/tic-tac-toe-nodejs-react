@@ -37,13 +37,16 @@ class App extends React.Component {
     });
   }
 
-  winner = () => {
+  fetchWinner = () => {
     const { gameBoard } = this.state
-    fetch('/api/winner', {
+    return fetch('/api/winner', {
       method: 'POST',
       headers: { "Content-Type": 'application/json' },
       body: JSON.stringify({ board: gameBoard })
-    }).then(response => response.json()).then((obj) => {
+    })
+  }
+  winner = () => {
+    this.fetchWinner().then(response => response.json()).then((obj) => {
       const gameStatusRes = obj.winner;
       if (gameStatusRes !== 'In Progress') {
         this.setState({ gameStatus: gameStatusRes })
@@ -68,11 +71,12 @@ class App extends React.Component {
     this.setState({ player })
     if (!player) this.computerMove();
   }
+
   playerTurn(count) {
     return count % 2 === 0 ? 'X' : 'O'
   }
 
-  cardClick(index) {
+  cardClick = (index) => {
     const { gameCounter, gameBoard, gameStatus } = this.state
     if (gameBoard[index] !== '') return alert("Invalid CLick")
     if (gameStatus === 'In Progress') {
@@ -80,12 +84,7 @@ class App extends React.Component {
       this.setState({
         gameCounter: gameCounter + 1
       })
-
-      fetch('/api/winner', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ board: gameBoard })
-      }).then(response => response.json()).then((obj) => {
+      this.fetchWinner().then(response => response.json()).then((obj) => {
         const gameStatusRes = obj.winner;
         if (gameStatusRes !== 'In Progress') {
           this.setState({ gameStatus: gameStatusRes })
@@ -100,31 +99,30 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="tall-container-wrapper">
-        <div className="gameplay"><h3>To start game click on board to play as 'X' or click on 'Player O' to go second.</h3></div>
+      <div className="center">
+        <div className="gameplay"><h3>To start game click on board to play first as 'X' or click on 'As Player 2 (O)' to go second.</h3></div>
+        <center>
+          <table className="play_as">
+            <tr>
+              <td className="player" onClick={() => this.computerPlayerClick(1)} style={{ background: this.state.player ? "lightblue" : "white" }}><h2>As Player 1 (X) </h2></td>
+              <td className="player" onClick={() => this.computerPlayerClick(0)} style={{ background: !this.state.player ? "lightblue" : "white" }}><h2>As Player 2 (O)</h2></td>
+            </tr>
+          </table>
 
-        <table className="play_as">
-          <tr>
-            <td className="player" onClick={() => this.computerPlayerClick(1)} style={{ background: this.state.player ? "lightblue" : "white" }}><h2>Player X</h2></td>
-            <td className="player" onClick={() => this.computerPlayerClick(0)} style={{ background: !this.state.player ? "lightblue" : "white" }}><h2>Player O</h2></td>
-          </tr>
-        </table>
-
-        <table className="board">
-          <tbody>
-            {['', '', ''].map((value, index) => {
-              return (<tr>
-                <td className="square" id={index * 3} onClick={() => this.cardClick(index * 3)}><h2>{this.state.gameBoard[index * 3]}</h2></td>
-                <td className="square" id={index * 3 + 1} onClick={() => this.cardClick(index * 3 + 1)}><h2>{this.state.gameBoard[index * 3 + 1]}</h2></td>
-                <td className="square" id={index * 3 + 2} onClick={() => this.cardClick(index * 3 + 2)}><h2>{this.state.gameBoard[index * 3 + 2]}</h2></td>
-              </tr>)
-            })}
-          </tbody>
-        </table>
-
-        <div className="outcome"><h2>{this.state.gameStatus}</h2></div>
-
-        <div><button onClick={this.newGameClick}>New Game</button></div>
+          <table className="board">
+            <tbody>
+              {['', '', ''].map((value, index) => {
+                return (<tr>
+                  <td className="square" id={index * 3} onClick={() => this.cardClick(index * 3)}><h2>{this.state.gameBoard[index * 3]}</h2></td>
+                  <td className="square" id={index * 3 + 1} onClick={() => this.cardClick(index * 3 + 1)}><h2>{this.state.gameBoard[index * 3 + 1]}</h2></td>
+                  <td className="square" id={index * 3 + 2} onClick={() => this.cardClick(index * 3 + 2)}><h2>{this.state.gameBoard[index * 3 + 2]}</h2></td>
+                </tr>)
+              })}
+            </tbody>
+          </table>
+          <div className="outcome"><h2>{this.state.gameStatus}</h2></div>
+          <div><button className="player" onClick={this.newGameClick}>New Game</button></div>
+        </center>
       </div>
     );
   }

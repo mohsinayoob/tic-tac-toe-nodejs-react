@@ -5,7 +5,6 @@ var cookieParser = require('cookie-parser');
 var api = require('./routes/api');
 
 var app = express();
-app.use(express.static("../build"));
 app.set('port', (process.env.PORT || 3000));
 
 var server = app.listen(app.get('port'), function () {
@@ -27,9 +26,9 @@ app.use('/api', (req, res, next) => {
 app.use('/api', api);
 
 app.use(express.static("build"));
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve("build", "index.html"))
-  );
+app.get("*", (req, res) =>
+  res.sendFile(path.resolve("build", "index.html"))
+);
 app.all('*', function (req, res) {
   res.status(404).send('Nothing Here');
 });
