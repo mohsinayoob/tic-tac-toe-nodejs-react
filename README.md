@@ -39,4 +39,4 @@ Your app is ready to be deployed!
 
 ### `Screenshot`
 
-![Game Screenshot](./screenshot.png)
+![Game Screenshot](./Screenshot.png)
